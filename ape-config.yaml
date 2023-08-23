@@ -1,0 +1,17 @@
+name: keepers
+
+plugins:
+  - name: solidity
+  - name: etherscan
+  - name: optimism
+  - name: alchemy
+  - name: infura
+
+optimism:
+  default_network: goerli
+  goerli:
+    default_provider: alchemy
+    transaction_acceptance_timeout: 120
+  mainnet:
+    default_provider: alchemy
+    transaction_acceptance_timeout: 120
