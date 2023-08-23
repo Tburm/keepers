@@ -6,10 +6,12 @@ WORKDIR /app
 
 # Copy requirements file
 COPY requirements.txt .
+COPY ape-config.yaml .
 
 # Install dependencies
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
+RUN ape plugins install .
 
 # Copy app source code
 COPY . .
