@@ -17,4 +17,4 @@ RUN ape plugins install .
 COPY . .
 
 # Command to run the service
-CMD ["silverback", "run", "main:app", "--network", "optimism:goerli:alchemy"]
+CMD ["silverback", "run", "main:app", "--network", "optimism:goerli:alchemy", "--runner", "silverback.runner:WebsocketRunner"]
