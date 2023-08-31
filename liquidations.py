@@ -51,7 +51,7 @@ def get_account_ids(snx):
     url = 'https://api.thegraph.com/subgraphs/name/tburm/perps-market-optimism-goerli'
 
     result = snx.queries._run_query_sync(query, params, 'orders', url)
-    account_ids = [int(account_id) for account_id in result['accountId'].tolist()]
+    account_ids = [int(account_id) for account_id in result['accountId'].unique().tolist()]
     return account_ids
 
 # Set up the app state
