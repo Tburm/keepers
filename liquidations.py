@@ -18,6 +18,7 @@ PROVIDER_RPC_URL = os.environ.get('TESTNET_RPC')
 ADDRESS = os.environ.get('ADDRESS')
 PRIVATE_KEY = os.environ.get('PRIVATE_KEY')
 NETWORK_ID = os.environ.get('NETWORK_ID')
+SATSUMA_API_KEY = os.environ.get('SATSUMA_API_KEY')
 
 # init snx
 snx = Synthetix(
@@ -25,6 +26,7 @@ snx = Synthetix(
     private_key=PRIVATE_KEY,
     address=ADDRESS,
     network_id=NETWORK_ID,
+    satsuma_api_key=SATSUMA_API_KEY,
 )
 
 # function to get account ids
@@ -37,7 +39,7 @@ def get_account_ids(snx):
                 where: {
                     id_gt: $last_id
                 }
-                first: 1000
+                first: 10000
             ) {
                 id
                 accountId
@@ -49,9 +51,7 @@ def get_account_ids(snx):
         'last_id': '',
     }
 
-    url = 'https://api.thegraph.com/subgraphs/name/tburm/perps-market-optimism-goerli'
-
-    result = snx.queries._run_query_sync(query, params, 'orders', url)
+    result = snx.queries._run_query_sync(query, params, 'orders', snx.queries._gql_endpoint_perps)
     account_ids = [int(account_id) for account_id in result['accountId'].unique().tolist()]
     return account_ids
 
