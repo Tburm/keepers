@@ -1,4 +1,4 @@
-# to run: silverback run main:app --network optimism:goerli:alchemy --runner silverback.runner:WebsocketRunner
+# silverback run main:app --network optimism:goerli:alchemy --runner silverback.runner:WebsocketRunner
 import os
 import asyncio
 import concurrent.futures
@@ -23,7 +23,8 @@ snx = Synthetix(
     provider_rpc=PROVIDER_RPC_URL,
     private_key=PRIVATE_KEY,
     address=ADDRESS,
-    network_id=NETWORK_ID
+    network_id=NETWORK_ID,
+    price_service_endpoint='https://hermes-beta.pyth.network'
 )
 
 # Do this to initialize your app

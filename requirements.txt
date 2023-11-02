@@ -1,5 +1,5 @@
 python-dotenv
 ipykernel
 eth-ape
--e git+https://github.com/Synthetixio/python-sdk.git@d2ae4e795ddc0785fb0f732154568bb4035f68c2#egg=synthetix&subdirectory=src
+-e git+https://github.com/Synthetixio/python-sdk.git@83369e2d5d5cd2a9bc58b57b787cff6f0b7611f5#egg=synthetix&subdirectory=src
 -e git+https://github.com/ApeWorX/silverback.git@0795aff13f7e19eb2a5db4782de5cc3d84d90da2#egg=silverback
