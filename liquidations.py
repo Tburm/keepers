@@ -1,4 +1,4 @@
-# to run: silverback run liquidations:app --network optimism:goerli:alchemy --runner silverback.runner:WebsocketRunner
+# silverback run liquidations:app --network base:goerli:alchemy --runner silverback.runner:WebsocketRunner
 import os
 import asyncio
 import concurrent.futures
@@ -9,7 +9,7 @@ from ape.api import BlockAPI
 from gql import gql
 from synthetix import Synthetix
 
-from silverback import SilverBackApp
+from silverback import SilverbackApp
 
 # load the environment variables
 load_dotenv()
@@ -17,13 +17,16 @@ load_dotenv()
 PROVIDER_RPC_URL = os.environ.get('TESTNET_RPC')
 ADDRESS = os.environ.get('ADDRESS')
 PRIVATE_KEY = os.environ.get('PRIVATE_KEY')
+NETWORK_ID = os.environ.get('NETWORK_ID')
+SATSUMA_API_KEY = os.environ.get('SATSUMA_API_KEY')
 
 # init snx
 snx = Synthetix(
     provider_rpc=PROVIDER_RPC_URL,
     private_key=PRIVATE_KEY,
     address=ADDRESS,
-    network_id=420,
+    network_id=NETWORK_ID,
+    satsuma_api_key=SATSUMA_API_KEY,
 )
 
 # function to get account ids
@@ -36,7 +39,7 @@ def get_account_ids(snx):
                 where: {
                     id_gt: $last_id
                 }
-                first: 1000
+                first: 10000
             ) {
                 id
                 accountId
@@ -48,9 +51,7 @@ def get_account_ids(snx):
         'last_id': '',
     }
 
-    url = 'https://api.thegraph.com/subgraphs/name/tburm/perps-market-optimism-goerli'
-
-    result = snx.queries._run_query_sync(query, params, 'orders', url)
+    result = snx.queries._run_query_sync(query, params, 'orders', snx.queries._gql_endpoint_perps)
     account_ids = [int(account_id) for account_id in result['accountId'].unique().tolist()]
     return account_ids
 
@@ -60,10 +61,10 @@ app_state = {
 }
 
 # Do this to initialize your app
-app = SilverBackApp()
+app = SilverbackApp()
 
 # Get the perps proxy contract
-PerpsMarket = project.PerpsMarketProxy.at('0xf272382cB3BE898A8CdB1A23BE056fA2Fcf4513b')
+PerpsMarket = project.PerpsMarketProxy.at(snx.perps.market_proxy.address)
 
 # Can handle some stuff on startup, like loading a heavy model or something
 @app.on_startup()

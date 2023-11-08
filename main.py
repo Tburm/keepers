@@ -1,4 +1,4 @@
-# to run: silverback run "test_silverback:app" --network optimism:goerli:alchemy
+# silverback run main:app --network base:goerli:alchemy --runner silverback.runner:WebsocketRunner
 import os
 import asyncio
 import concurrent.futures
@@ -8,7 +8,7 @@ from ape import project
 from ape.api import BlockAPI
 from synthetix import Synthetix
 
-from silverback import SilverBackApp
+from silverback import SilverbackApp
 
 # load the environment variables
 load_dotenv()
@@ -16,21 +16,23 @@ load_dotenv()
 PROVIDER_RPC_URL = os.environ.get('TESTNET_RPC')
 ADDRESS = os.environ.get('ADDRESS')
 PRIVATE_KEY = os.environ.get('PRIVATE_KEY')
+NETWORK_ID = os.environ.get('NETWORK_ID')
 
 # init snx
 snx = Synthetix(
     provider_rpc=PROVIDER_RPC_URL,
     private_key=PRIVATE_KEY,
     address=ADDRESS,
-    network_id=420,
+    network_id=NETWORK_ID,
+    price_service_endpoint='https://hermes-beta.pyth.network'
 )
 
 # Do this to initialize your app
-app = SilverBackApp()
+app = SilverbackApp()
 
 # Get the perps proxy contract
-PerpsMarket = project.PerpsMarketProxy.at('0xf272382cB3BE898A8CdB1A23BE056fA2Fcf4513b')
-SpotMarket = project.SpotMarketProxy.at('0x5FF4b3aacdeC86782d8c757FAa638d8790799E83')
+PerpsMarket = project.PerpsMarketProxy.at(snx.perps.market_proxy.address)
+SpotMarket = project.SpotMarketProxy.at(snx.spot.market_proxy.address)
 
 # Can handle some stuff on startup, like loading a heavy model or something
 @app.on_startup()
