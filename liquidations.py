@@ -1,4 +1,4 @@
-# to run: silverback run liquidations:app --network optimism:goerli:alchemy --runner silverback.runner:WebsocketRunner
+# silverback run liquidations:app --network base:goerli:alchemy --runner silverback.runner:WebsocketRunner
 import os
 import asyncio
 import concurrent.futures
@@ -9,7 +9,7 @@ from ape.api import BlockAPI
 from gql import gql
 from synthetix import Synthetix
 
-from silverback import SilverBackApp
+from silverback import SilverbackApp
 
 # load the environment variables
 load_dotenv()
@@ -61,7 +61,7 @@ app_state = {
 }
 
 # Do this to initialize your app
-app = SilverBackApp()
+app = SilverbackApp()
 
 # Get the perps proxy contract
 PerpsMarket = project.PerpsMarketProxy.at(snx.perps.market_proxy.address)
