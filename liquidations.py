@@ -27,6 +27,7 @@ snx = Synthetix(
     address=ADDRESS,
     network_id=NETWORK_ID,
     satsuma_api_key=SATSUMA_API_KEY,
+    gql_endpoint_perps='https://subgraph.satsuma-prod.com/{api_key}/synthetix/perps-market-base-goerli-andromeda/api'
 )
 
 # function to get account ids
