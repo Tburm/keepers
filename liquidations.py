@@ -8,6 +8,8 @@ from ape import project
 from ape.api import BlockAPI
 from gql import gql
 from synthetix import Synthetix
+from synthetix.utils import wei_to_ether
+from synthetix.utils.multicall import multicall_erc7412
 
 from silverback import SilverbackApp
 
@@ -26,35 +28,51 @@ snx = Synthetix(
     private_key=PRIVATE_KEY,
     address=ADDRESS,
     network_id=NETWORK_ID,
-    satsuma_api_key=SATSUMA_API_KEY,
-    gql_endpoint_perps='https://subgraph.satsuma-prod.com/{api_key}/synthetix/perps-market-base-goerli-andromeda/api'
 )
 
 # function to get account ids
 def get_account_ids(snx):
-    query = gql("""
-        query(
-            $last_id: ID!
-        ) {
-            orders (
-                where: {
-                    id_gt: $last_id
-                }
-                first: 10000
-            ) {
-                id
-                accountId
-            }
-        }
-    """)
+    """Fetch a list of accounts that have some collateral and have open positions"""
+    account_proxy = snx.perps.account_proxy
+    market_proxy = snx.perps.market_proxy
 
-    params = {
-        'last_id': '',
-    }
+    # get the total number of accounts
+    total_supply = account_proxy.functions.totalSupply().call()
 
-    result = snx.queries._run_query_sync(query, params, 'orders', snx.queries._gql_endpoint_perps)
-    account_ids = [int(account_id) for account_id in result['accountId'].unique().tolist()]
-    return account_ids
+    # fetch the account ids
+    account_ids = []
+    supply_chunks = [range(x, min(x+500, total_supply)) for x in range(0, total_supply, 500)]
+    for supply_chunk in supply_chunks:
+        accounts = multicall_erc7412(
+            snx, account_proxy, 'tokenByIndex', supply_chunk
+        )
+        account_ids.extend(accounts)
+
+    # check those accounts margin requirements
+    require_margins = []
+    values = []
+    margin_chunks = [account_ids[x:min(x+500, total_supply)] for x in range(0, total_supply, 500)]
+    for margin_chunk in margin_chunks:
+        margins = multicall_erc7412(
+            snx, market_proxy, 'getRequiredMargins', margin_chunk
+        )
+        collateral_values = multicall_erc7412(
+            snx, market_proxy, 'totalCollateralValue', margin_chunk
+        )
+        
+        values.extend(collateral_values)
+        require_margins.extend(margins)
+
+    # filter accounts without a margin requirement
+    # filter accounts with less than 100 USD in collateral
+    # this eliminates accounts that have no open positions or small amounts of collateral
+    account_infos = zip(account_ids, require_margins, values)
+    accounts_to_check = [
+        account[0]
+        for account in account_infos
+        if wei_to_ether(account[1][1]) >= 0 and wei_to_ether(account[2]) >= 100
+    ]
+    return accounts_to_check
 
 # Set up the app state
 app_state = {
@@ -77,7 +95,6 @@ def startup(state):
 # Log new blocks
 @app.on_(chain.blocks)
 def exec_block(block: BlockAPI):
-    print("NEW BLOCK: ", block.number)
     # every 100 blocks, refresh the account ids
     if block.number % 100 == 0:
         app_state['account_ids'] = get_account_ids(snx)
