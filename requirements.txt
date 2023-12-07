@@ -2,4 +2,4 @@ python-dotenv
 ipykernel
 eth-ape
 silverback
--e git+https://github.com/Synthetixio/python-sdk.git@456b52e033e243ad35f7a6e028a134cfabce16f1#egg=synthetix&subdirectory=src
+synthetix==0.1.0

@@ -1,10 +1,7 @@
 # silverback run liquidations:app --network base:goerli:alchemy --runner silverback.runner:WebsocketRunner
 import os
-import asyncio
-import concurrent.futures
 from dotenv import load_dotenv
-from ape import chain
-from ape import project
+from ape import chain, project, Contract
 from ape.api import BlockAPI
 from gql import gql
 from synthetix import Synthetix
@@ -83,7 +80,10 @@ app_state = {
 app = SilverbackApp()
 
 # Get the perps proxy contract
-PerpsMarket = project.PerpsMarketProxy.at(snx.perps.market_proxy.address)
+PerpsMarket = Contract(
+    address=snx.perps.market_proxy.address,
+    abi=snx.perps.market_proxy.abi
+)
 
 # Can handle some stuff on startup, like loading a heavy model or something
 @app.on_startup()
