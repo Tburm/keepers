@@ -1,7 +1,7 @@
 # silverback run main:app --network base:goerli:alchemy --runner silverback.runner:WebsocketRunner
 import os
 from dotenv import load_dotenv
-from ape import chain, project, Contract
+from ape import chain, Contract
 from ape.api import BlockAPI
 from synthetix import Synthetix
 

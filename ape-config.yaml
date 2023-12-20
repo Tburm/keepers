@@ -2,11 +2,17 @@ name: keepers
 
 plugins:
   - name: solidity
+    version: "<0.7.0"
   - name: etherscan
+    version: "<0.7.0"
   - name: optimism
+    version: "<0.7.0"
   - name: alchemy
+    version: "<0.7.0"
   - name: infura
+    version: "<0.7.0"
   - name: base
+    version: "<0.7.0"
 
 optimism:
   default_network: goerli

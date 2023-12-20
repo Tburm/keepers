@@ -9,9 +9,6 @@ COPY requirements.txt .
 COPY ape-config.yaml .
 
 # Install dependencies
-RUN python -m venv /env
-ENV PATH="/env/bin:$PATH"
-
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 RUN ape plugins install .
