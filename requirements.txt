@@ -2,4 +2,4 @@ python-dotenv
 ipykernel
 eth-ape==0.6.27
 silverback==0.1.1
-synthetix==0.1.1
+synthetix==0.1.2
