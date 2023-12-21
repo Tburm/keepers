@@ -1,4 +1,4 @@
-# silverback run liquidations:app --network base:goerli:alchemy --runner silverback.runner:WebsocketRunner
+# silverback run liquidations_mainnet:app --network base:mainnet:alchemy --runner silverback.runner:WebsocketRunner
 import os
 from dotenv import load_dotenv
 from ape import chain, project, Contract
@@ -13,10 +13,11 @@ from silverback import SilverbackApp
 # load the environment variables
 load_dotenv()
 
-PROVIDER_RPC_URL = os.environ.get('MAINNET_RPC')
-ADDRESS = os.environ.get('ADDRESS')
-PRIVATE_KEY = os.environ.get('PRIVATE_KEY')
-NETWORK_ID = os.environ.get('NETWORK_ID')
+PROVIDER_RPC_URL = os.environ.get("MAINNET_RPC")
+ADDRESS = os.environ.get("ADDRESS")
+PRIVATE_KEY = os.environ.get("PRIVATE_KEY")
+NETWORK_ID = os.environ.get("NETWORK_ID")
+
 
 # init snx
 snx = Synthetix(
@@ -25,6 +26,7 @@ snx = Synthetix(
     address=ADDRESS,
     network_id=NETWORK_ID,
 )
+
 
 # function to get account ids
 def get_account_ids(snx):
@@ -37,25 +39,27 @@ def get_account_ids(snx):
 
     # fetch the account ids
     account_ids = []
-    supply_chunks = [range(x, min(x+500, total_supply)) for x in range(0, total_supply, 500)]
+    supply_chunks = [
+        range(x, min(x + 500, total_supply)) for x in range(0, total_supply, 500)
+    ]
     for supply_chunk in supply_chunks:
-        accounts = multicall_erc7412(
-            snx, account_proxy, 'tokenByIndex', supply_chunk
-        )
+        accounts = multicall_erc7412(snx, account_proxy, "tokenByIndex", supply_chunk)
         account_ids.extend(accounts)
 
     # check those accounts margin requirements
     require_margins = []
     values = []
-    margin_chunks = [account_ids[x:min(x+500, total_supply)] for x in range(0, total_supply, 500)]
+    margin_chunks = [
+        account_ids[x : min(x + 500, total_supply)] for x in range(0, total_supply, 500)
+    ]
     for margin_chunk in margin_chunks:
         margins = multicall_erc7412(
-            snx, market_proxy, 'getRequiredMargins', margin_chunk
+            snx, market_proxy, "getRequiredMargins", margin_chunk
         )
         collateral_values = multicall_erc7412(
-            snx, market_proxy, 'totalCollateralValue', margin_chunk
+            snx, market_proxy, "totalCollateralValue", margin_chunk
         )
-        
+
         values.extend(collateral_values)
         require_margins.extend(margins)
 
@@ -70,6 +74,7 @@ def get_account_ids(snx):
     ]
     return accounts_to_check
 
+
 # Set up the app state
 app_state = {
     "account_ids": [],
@@ -80,14 +85,14 @@ app = SilverbackApp()
 
 # Get the perps proxy contract
 PerpsMarket = Contract(
-    address=snx.perps.market_proxy.address,
-    abi=snx.perps.market_proxy.abi
+    address=snx.perps.market_proxy.address, abi=snx.perps.market_proxy.abi
 )
+
 
 # Can handle some stuff on startup, like loading a heavy model or something
 @app.on_startup()
 def startup(state):
-    app_state['account_ids'] = get_account_ids(snx)
+    app_state["account_ids"] = get_account_ids(snx)
     return {"message": "Starting..."}
 
 
@@ -96,23 +101,28 @@ def startup(state):
 def exec_block(block: BlockAPI):
     # every 100 blocks, refresh the account ids
     if block.number % 100 == 0:
-        app_state['account_ids'] = get_account_ids(snx)
-    
+        app_state["account_ids"] = get_account_ids(snx)
+
     # every 10 blocks check for liquidations
     if block.number % 10 == 0:
         # split into 500 account chunks and check liquidations
-        chunks = [app_state['account_ids'][x:x+500] for x in range(0, len(app_state['account_ids']), 500)]
+        chunks = [
+            app_state["account_ids"][x : x + 500]
+            for x in range(0, len(app_state["account_ids"]), 500)
+        ]
 
         for chunk in chunks:
             can_liquidates = snx.perps.get_can_liquidates(chunk)
 
-            liquidatable_accounts = [can_liquidate[0] for can_liquidate in can_liquidates if can_liquidate[1]]
+            liquidatable_accounts = [
+                can_liquidate[0] for can_liquidate in can_liquidates if can_liquidate[1]
+            ]
+            snx.logger.info(f"Found {len(liquidatable_accounts)} liquidatable accounts")
             for account in liquidatable_accounts:
-                print(f'Liquidating account {account}')
+                snx.logger.info(f"Liquidating account {account}")
                 try:
-                    tx = snx.perps.liquidate(account, submit=True)
-                    print(tx)
+                    tx = snx.perps.liquidate(account, submit=False)
                 except Exception as e:
-                    print(f'Error liquidating account {account}: {e}')
+                    snx.logger.error(f"Error liquidating account {account}: {e}")
 
     return {"message": f"Received block number {block.number}"}
