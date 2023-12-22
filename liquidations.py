@@ -108,12 +108,12 @@ def exec_block(block: BlockAPI):
             can_liquidates = snx.perps.get_can_liquidates(chunk)
 
             liquidatable_accounts = [can_liquidate[0] for can_liquidate in can_liquidates if can_liquidate[1]]
+            snx.logger.info(f"Found {len(liquidatable_accounts)} liquidatable accounts")
             for account in liquidatable_accounts:
-                print(f'Liquidating account {account}')
+                snx.logger.info(f"Liquidating account {account}")
                 try:
-                    tx = snx.perps.liquidate(account, submit=True)
-                    print(tx)
+                    tx = snx.perps.liquidate(account, submit=False)
                 except Exception as e:
-                    print(f'Error liquidating account {account}: {e}')
+                    snx.logger.error(f"Error liquidating account {account}: {e}")
 
     return {"message": f"Received block number {block.number}"}
