@@ -112,7 +112,7 @@ def exec_block(block: BlockAPI):
             for account in liquidatable_accounts:
                 snx.logger.info(f"Liquidating account {account}")
                 try:
-                    tx = snx.perps.liquidate(account, submit=False)
+                    tx = snx.perps.liquidate(account, submit=True)
                 except Exception as e:
                     snx.logger.error(f"Error liquidating account {account}: {e}")
 
