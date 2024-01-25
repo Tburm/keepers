@@ -10,7 +10,7 @@ from silverback import SilverbackApp
 # load the environment variables
 load_dotenv()
 
-PROVIDER_RPC_URL = os.environ.get('TESTNET_RPC')
+PROVIDER_RPC_URL = os.environ.get('PROVIDER_RPC')
 ADDRESS = os.environ.get('ADDRESS')
 PRIVATE_KEY = os.environ.get('PRIVATE_KEY')
 NETWORK_ID = os.environ.get('NETWORK_ID')
