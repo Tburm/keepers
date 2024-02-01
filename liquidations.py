@@ -61,13 +61,12 @@ def get_account_ids(snx):
         require_margins.extend(margins)
 
     # filter accounts without a margin requirement
-    # filter accounts with less than 100 USD in collateral
     # this eliminates accounts that have no open positions or small amounts of collateral
     account_infos = zip(account_ids, require_margins, values)
     accounts_to_check = [
         account[0]
         for account in account_infos
-        if wei_to_ether(account[1][1]) >= 0 and wei_to_ether(account[2]) >= 100
+        if wei_to_ether(account[1][1]) >= 0
     ]
     return accounts_to_check
 
