@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  # order-keeper-sepolia:
+  #   restart: always
+  #   build: .
+  #   env_file: .env_order_sepolia
+  #   entrypoint: ["silverback", "run", "main:app", "--network", "base:sepolia:alchemy", "--runner", "silverback.runner:WebsocketRunner"]
+
+  # liq-keeper-sepolia:
+  #   restart: always
+  #   build: .
+  #   env_file: .env_liq_sepolia
+  #   entrypoint: ["silverback", "run", "liquidations:app", "--network", "base:sepolia:alchemy", "--runner", "silverback.runner:WebsocketRunner"]
+
+  liq-keeper-mainnet:
+    restart: always
+    build: .
+    env_file: .env
+    entrypoint: ["silverback", "run", "liquidations:app", "--network", "base:mainnet:alchemy", "--runner", "silverback.runner:WebsocketRunner"]
+
+  order-keeper-mainnet:
+    restart: always
+    build: .
+    env_file: .env
+    entrypoint: ["silverback", "run", "main:app", "--network", "base:mainnet:alchemy", "--runner", "silverback.runner:WebsocketRunner"]
