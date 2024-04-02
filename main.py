@@ -1,4 +1,4 @@
-# silverback run main:app --network base:goerli:alchemy --runner silverback.runner:WebsocketRunner
+# silverback run main:app --network base:mainnet:alchemy --runner silverback.runner:WebsocketRunner
 import os
 import time
 from dotenv import load_dotenv
@@ -56,7 +56,11 @@ def settle_perps_order(event):
     order = snx.perps.get_order(account_id)
     if order["size_delta"] != 0:
         snx.logger.info(f"Settling {market_name} order committed by {account_id}")
-        snx.perps.settle_order(account_id, submit=True)
+        order_settlement_tx = snx.perps.settle_order(account_id, submit=False)
+
+        # double the base fee
+        order_settlement_tx["maxFeePerGas"] = order_settlement_tx["maxFeePerGas"] * 2
+        snx.execute_transaction(order_settlement_tx)
     else:
         snx.logger.info(f"Keeper settled {market_name} order committed by {account_id}")
 
