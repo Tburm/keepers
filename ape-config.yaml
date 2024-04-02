@@ -2,9 +2,8 @@ name: keepers
 
 plugins:
   - name: optimism
-    version: "<0.7.0"
   - name: base
-    version: "<0.7.0"
+  - name: alchemy
 
 optimism:
   default_network: goerli
