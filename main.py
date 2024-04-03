@@ -25,10 +25,9 @@ snx = Synthetix(
     private_key=PRIVATE_KEY,
     address=ADDRESS,
     network_id=NETWORK_ID,
-    price_service_endpoint="https://hermes.pyth.network",
     cannon_config={
         "package": "synthetix-omnibus",
-        "version": "latest",
+        "version": "7",
         "preset": "andromeda",
     },
 )

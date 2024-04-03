@@ -24,6 +24,11 @@ snx = Synthetix(
     private_key=PRIVATE_KEY,
     address=ADDRESS,
     network_id=NETWORK_ID,
+    cannon_config={
+        "package": "synthetix-omnibus",
+        "version": "7",
+        "preset": "andromeda",
+    },
 )
 
 
