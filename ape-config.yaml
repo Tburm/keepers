@@ -4,10 +4,11 @@ plugins:
   - name: optimism
   - name: base
   - name: alchemy
+  - name: foundry
 
 optimism:
-  default_network: goerli
-  goerli:
+  default_network: sepolia
+  sepolia:
     default_provider: alchemy
     transaction_acceptance_timeout: 120
   mainnet:
@@ -15,10 +16,17 @@ optimism:
     transaction_acceptance_timeout: 120
 
 base:
-  default_network: goerli
-  goerli:
+  default_network: sepolia
+  sepolia:
     default_provider: alchemy
     transaction_acceptance_timeout: 120
   mainnet:
     default_provider: alchemy
     transaction_acceptance_timeout: 120
+
+foundry:
+  block_time: 2
+  fork:
+    base:
+      mainnet:
+        upstream_provider: alchemy

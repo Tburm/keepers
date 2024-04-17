@@ -11,25 +11,18 @@ from silverback import SilverbackApp
 # load the environment variables
 load_dotenv()
 
-PROVIDER_RPC_URL = os.environ.get("PROVIDER_RPC")
 ADDRESS = os.environ.get("ADDRESS")
 PRIVATE_KEY = os.environ.get("PRIVATE_KEY")
-NETWORK_ID = os.environ.get("NETWORK_ID")
 
 # constants
 DELAY_SECONDS = 10
 
 # init snx
 snx = Synthetix(
-    provider_rpc=PROVIDER_RPC_URL,
+    provider_rpc=chain.provider.uri,
     private_key=PRIVATE_KEY,
     address=ADDRESS,
-    network_id=NETWORK_ID,
-    cannon_config={
-        "package": "synthetix-omnibus",
-        "version": "7",
-        "preset": "andromeda",
-    },
+    is_fork=chain.provider.name == "foundry",
 )
 
 # Do this to initialize your app
@@ -59,7 +52,17 @@ def settle_perps_order(event):
 
         # double the base fee
         order_settlement_tx["maxFeePerGas"] = order_settlement_tx["maxFeePerGas"] * 2
-        snx.execute_transaction(order_settlement_tx)
+        tx_hash = snx.execute_transaction(order_settlement_tx)
+        tx_receipt = snx.wait(tx_hash)
+
+        if tx_receipt["status"] == 1:
+            snx.logger.info(
+                f"Keeper settled {market_name} order committed by {account_id}"
+            )
+        else:
+            snx.logger.error(
+                f"Keeper failed to settle {market_name} order committed by {account_id}"
+            )
     else:
         snx.logger.info(f"Keeper settled {market_name} order committed by {account_id}")
 
