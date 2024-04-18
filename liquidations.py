@@ -1,9 +1,8 @@
-# silverback run liquidations:app --network base:goerli:alchemy --runner silverback.runner:WebsocketRunner
+# silverback run liquidations:app --network base:sepolia:alchemy --runner silverback.runner:WebsocketRunner
 import os
 from dotenv import load_dotenv
-from ape import chain, project, Contract
+from ape import chain, Contract
 from ape.api import BlockAPI
-from gql import gql
 from synthetix import Synthetix
 from synthetix.utils import wei_to_ether
 from synthetix.utils.multicall import multicall_erc7412
@@ -13,22 +12,15 @@ from silverback import SilverbackApp
 # load the environment variables
 load_dotenv()
 
-PROVIDER_RPC_URL = os.environ.get("PROVIDER_RPC")
 ADDRESS = os.environ.get("ADDRESS")
 PRIVATE_KEY = os.environ.get("PRIVATE_KEY")
-NETWORK_ID = os.environ.get("NETWORK_ID")
 
 # init snx
 snx = Synthetix(
-    provider_rpc=PROVIDER_RPC_URL,
+    provider_rpc=chain.provider.uri,
     private_key=PRIVATE_KEY,
     address=ADDRESS,
-    network_id=NETWORK_ID,
-    cannon_config={
-        "package": "synthetix-omnibus",
-        "version": "7",
-        "preset": "andromeda",
-    },
+    is_fork=chain.provider.name == "foundry",
 )
 
 
