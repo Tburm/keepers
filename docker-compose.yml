@@ -24,3 +24,9 @@ services:
     build: .
     env_file: .env
     entrypoint: ["silverback", "run", "main:app", "--network", "base:mainnet:alchemy", "--runner", "silverback.runner:WebsocketRunner"]
+
+  price-keeper-mainnet:
+    restart: always
+    build: .
+    env_file: .env
+    entrypoint: ["silverback", "run", "price_pusher:app", "--network", "base:mainnet:alchemy", "--runner", "silverback.runner:WebsocketRunner"]
