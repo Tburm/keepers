@@ -52,6 +52,13 @@ def exec_block(block: BlockAPI):
 
         if len(input["calls"]) > 1:
             snx.logger.info(f"Price update required, writing prices")
+            # remove the last call
+            snx.logger.info(f"Data before: {write_prices_tx['data']}")
+            write_prices_tx["data"] = multicall_contract.encodeABI(
+                "aggregate3Value", [input["calls"][:-1]]
+            )
+            snx.logger.info(f"Data after: {write_prices_tx['data']}")
+
             write_prices_tx_hash = snx.execute_transaction(write_prices_tx)
             write_prices_receipt = snx.wait(write_prices_tx_hash)
             snx.logger.info(f"Write prices receipt: {write_prices_receipt.status}")
