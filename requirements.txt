@@ -3,3 +3,4 @@ ipykernel
 eth-ape
 silverback
 synthetix
+-e git+https://github.com/Tburm/kwenta-python-sdk.git@6ca6a038605e5dd06acb7c0f3ba35f3e25c910fd#egg=kwenta&subdirectory=module
