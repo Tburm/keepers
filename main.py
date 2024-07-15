@@ -16,7 +16,7 @@ ADDRESS = os.environ.get("ADDRESS")
 PRIVATE_KEY = os.environ.get("PRIVATE_KEY")
 
 # constants
-DELAY_SECONDS = 10
+DELAY_SECONDS = 30
 SWAP_THRESHOLD = 200
 ODOS_ROUTER_ADDRESS = "0x19cEeAd7105607Cd444F5ad10dd51356436095a1"
 
@@ -41,7 +41,7 @@ def approvals(snx):
     # approve sUSD to spot market
     if susd_allowance == 0:
         tx_approve_susd = snx.approve(
-            snx.contracts["USDProxy"]["address"],
+            snx.contracts["system"]["USDProxy"]["address"],
             snx.spot.market_proxy.address,
             submit=True,
         )
@@ -132,7 +132,7 @@ def exec_block(block: BlockAPI):
         # contracts
         usdc_contract = snx.contracts["USDC"]["contract"]
         susdc_contract = snx.spot.markets_by_name["sUSDC"]["contract"]
-        susd_contract = snx.contracts["USDProxy"]["contract"]
+        susd_contract = snx.contracts["system"]["USDProxy"]["contract"]
 
         # get sUSD balance
         susd_balance = snx.get_susd_balance()
