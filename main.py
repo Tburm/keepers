@@ -41,7 +41,7 @@ def approvals(snx):
     # approve sUSD to spot market
     if susd_allowance == 0:
         tx_approve_susd = snx.approve(
-            snx.contracts["USDProxy"]["address"],
+            snx.contracts["system"]["USDProxy"]["address"],
             snx.spot.market_proxy.address,
             submit=True,
         )
@@ -132,7 +132,7 @@ def exec_block(block: BlockAPI):
         # contracts
         usdc_contract = snx.contracts["USDC"]["contract"]
         susdc_contract = snx.spot.markets_by_name["sUSDC"]["contract"]
-        susd_contract = snx.contracts["USDProxy"]["contract"]
+        susd_contract = snx.contracts["system"]["USDProxy"]["contract"]
 
         # get sUSD balance
         susd_balance = snx.get_susd_balance()
