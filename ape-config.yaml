@@ -3,6 +3,7 @@ name: keepers
 plugins:
   - name: optimism
   - name: base
+  - name: arbitrum
   - name: alchemy
   - name: foundry
 
@@ -16,6 +17,15 @@ optimism:
     transaction_acceptance_timeout: 120
 
 base:
+  default_network: sepolia
+  sepolia:
+    default_provider: alchemy
+    transaction_acceptance_timeout: 120
+  mainnet:
+    default_provider: alchemy
+    transaction_acceptance_timeout: 120
+
+arbitrum:
   default_network: sepolia
   sepolia:
     default_provider: alchemy
