@@ -25,8 +25,12 @@ snx = Synthetix(
     private_key=PRIVATE_KEY,
     address=ADDRESS,
     is_fork=chain.provider.name == "foundry",
+    cannon_config={
+        'package': "synthetix-omnibus",
+        "version": "latest",
+        "preset": "main"
+    }
 )
-print(snx.network_id)
 
 # Do this to initialize your app
 app = SilverbackApp()
