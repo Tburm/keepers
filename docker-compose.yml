@@ -1,11 +1,11 @@
 version: '3'
 
 services:
-  # order-keeper-arb-sepolia-octo:
+  # order-keeper-arb-sepolia:
   #   restart: always
   #   build: .
-  #   env_file: .env_order_arb_sepolia_octo
-  #   entrypoint: ["silverback", "run", "testnet_octopus:app", "--network", "arbitrum:sepolia:alchemy", "--runner", "silverback.runner:WebsocketRunner"]
+  #   env_file: .env_order_arb_sepolia
+  #   entrypoint: ["silverback", "run", "testnet:app", "--network", "arbitrum:sepolia:alchemy", "--runner", "silverback.runner:WebsocketRunner"]
 
   # order-keeper-sepolia:
   #   restart: always

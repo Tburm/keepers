@@ -14,6 +14,7 @@ load_dotenv('.env')
 
 ADDRESS = os.environ.get("ADDRESS")
 PRIVATE_KEY = os.environ.get("PRIVATE_KEY")
+CANNON_PRESET = os.environ.get("CANNON_PRESET")
 
 # constants
 DELAY_SECONDS = 0
@@ -25,8 +26,12 @@ snx = Synthetix(
     private_key=PRIVATE_KEY,
     address=ADDRESS,
     is_fork=chain.provider.name == "foundry",
+    cannon_config={
+        'package': "synthetix-omnibus",
+        "version": "latest",
+        "preset": CANNON_PRESET,
+    }
 )
-print(snx.network_id)
 
 # Do this to initialize your app
 app = SilverbackApp()
