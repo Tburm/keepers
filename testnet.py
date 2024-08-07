@@ -14,6 +14,7 @@ load_dotenv('.env')
 
 ADDRESS = os.environ.get("ADDRESS")
 PRIVATE_KEY = os.environ.get("PRIVATE_KEY")
+CANNON_PRESET = os.environ.get("CANNON_PRESET")
 
 # constants
 DELAY_SECONDS = 0
@@ -28,7 +29,7 @@ snx = Synthetix(
     cannon_config={
         'package': "synthetix-omnibus",
         "version": "latest",
-        "preset": "main"
+        "preset": CANNON_PRESET,
     }
 )
 
