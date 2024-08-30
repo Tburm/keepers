@@ -1,6 +1,36 @@
-version: '3'
+version: "3"
 
 services:
+  order-keeper-arb:
+    restart: always
+    build: .
+    env_file: .env_arb
+    entrypoint:
+      [
+        "silverback",
+        "run",
+        "arbitrum_orders:app",
+        "--network",
+        "arbitrum:mainnet:alchemy",
+        "--runner",
+        "silverback.runner:WebsocketRunner",
+      ]
+
+  liq-keeper-arb:
+    restart: always
+    build: .
+    env_file: .env_arb
+    entrypoint:
+      [
+        "silverback",
+        "run",
+        "liquidations:app",
+        "--network",
+        "arbitrum:mainnet:alchemy",
+        "--runner",
+        "silverback.runner:WebsocketRunner",
+      ]
+
   # order-keeper-arb-sepolia:
   #   restart: always
   #   build: .
@@ -23,13 +53,31 @@ services:
     restart: always
     build: .
     env_file: .env_order_sepolia
-    entrypoint: ["silverback", "run", "testnet:app", "--network", "base:sepolia:alchemy", "--runner", "silverback.runner:WebsocketRunner"]
+    entrypoint:
+      [
+        "silverback",
+        "run",
+        "testnet:app",
+        "--network",
+        "base:sepolia:alchemy",
+        "--runner",
+        "silverback.runner:WebsocketRunner",
+      ]
 
   liq-keeper-sepolia:
     restart: always
     build: .
     env_file: .env_liq_sepolia
-    entrypoint: ["silverback", "run", "liquidations:app", "--network", "base:sepolia:alchemy", "--runner", "silverback.runner:WebsocketRunner"]
+    entrypoint:
+      [
+        "silverback",
+        "run",
+        "liquidations:app",
+        "--network",
+        "base:sepolia:alchemy",
+        "--runner",
+        "silverback.runner:WebsocketRunner",
+      ]
 
   # liq-keeper-mainnet:
   #   restart: always

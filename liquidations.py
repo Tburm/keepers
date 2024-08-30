@@ -15,6 +15,18 @@ load_dotenv()
 ADDRESS = os.environ.get("ADDRESS")
 PRIVATE_KEY = os.environ.get("PRIVATE_KEY")
 
+# constants
+BLOCKS_ACCOUNT_REFRESH = (
+    100
+    if os.environ.get("BLOCKS_ACCOUNT_REFRESH") is None
+    else int(os.environ.get("BLOCKS_ACCOUNT_REFRESH"))
+)
+BLOCKS_LIQUIDATION_CHECK = (
+    10
+    if os.environ.get("BLOCKS_LIQUIDATION_CHECK") is None
+    else int(os.environ.get("BLOCKS_LIQUIDATION_CHECK"))
+)
+
 # init snx
 snx = Synthetix(
     provider_rpc=chain.provider.uri,
@@ -93,11 +105,11 @@ def startup(state):
 @app.on_(chain.blocks)
 def exec_block(block: BlockAPI):
     # every 100 blocks, refresh the account ids
-    if block.number % 100 == 0:
+    if block.number % BLOCKS_ACCOUNT_REFRESH == 0:
         app_state["account_ids"] = get_account_ids(snx)
 
     # every 10 blocks check for liquidations
-    if block.number % 10 == 0:
+    if block.number % BLOCKS_LIQUIDATION_CHECK == 0:
         # split into 500 account chunks and check liquidations
         chunks = [
             app_state["account_ids"][x : x + 500]
