@@ -1,5 +1,5 @@
 python-dotenv
 ipykernel
-eth-ape==0.8.9
-silverback==0.4.1
-synthetix==0.1.16
+eth-ape==0.8.15
+silverback==0.5.8
+synthetix==0.1.19
