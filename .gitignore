@@ -140,3 +140,6 @@ deployments/
 
 # system files
 .DS_Store
+
+# silverback
+.silverback-sessions

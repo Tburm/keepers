@@ -1,20 +1,26 @@
 # Base image
-FROM python:3.10
+FROM ghcr.io/astral-sh/uv:0.4.18-debian
+
+RUN apt-get update && apt-get install -y curl gcc python3-dev && rm -rf /var/lib/apt/lists/*
 
 # Create app directory
 WORKDIR /app
 
 # Copy requirements file
-COPY requirements.txt .
+COPY uv.lock .
+COPY pyproject.toml .
 COPY ape-config.yaml .
 
 # Install dependencies
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
-RUN ape plugins install .
+RUN uv python install
+RUN uv sync --frozen
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Install ape plugins
+RUN uv run ape plugins install .
 
 # Copy app source code
 COPY . .
 
 # Command to run the service
-CMD ["silverback", "run", "main:app", "--network", "optimism:goerli:alchemy", "--runner", "silverback.runner:WebsocketRunner"]
+CMD ["uv", "run", "silverback", "run", "main:app", "--network", "base:sepolia:alchemy", "--runner", "silverback.runner:WebsocketRunner"]
