@@ -54,27 +54,22 @@ def get_active_accounts(snx):
         account_ids.extend(accounts)
 
     # check those accounts margin requirements
-    require_margins = []
     values = []
     margin_chunks = [
         account_ids[x : min(x + 500, total_supply)] for x in range(0, total_supply, 500)
     ]
     for margin_chunk in margin_chunks:
-        margins = multicall_erc7412(
-            snx, market_proxy, "getRequiredMargins", margin_chunk
-        )
         collateral_values = multicall_erc7412(
             snx, market_proxy, "totalCollateralValue", margin_chunk
         )
 
         values.extend(collateral_values)
-        require_margins.extend(margins)
 
     # filter accounts without a margin requirement
     # this eliminates accounts that have no open positions or small amounts of collateral
-    account_infos = zip(account_ids, require_margins, values)
+    account_infos = zip(account_ids, values)
     active_accounts = [
-        account[0] for account in account_infos if wei_to_ether(account[1][2]) >= 0.01
+        account[0] for account in account_infos if wei_to_ether(account[1]) >= 1
     ]
     snx.logger.info(
         f"Updating active accounts list with {len(active_accounts)} accounts"

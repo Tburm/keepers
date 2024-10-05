@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from ape import chain, Contract
 from ape.api import BlockAPI
 from synthetix import Synthetix
-from utils.swap import swap_approvals, assemble_transaction, execute_swap
+from utils.swap import execute_base_swap, execute_arbitrum_swap
 from utils.perps_v3 import (
     settle_perps_order,
     get_active_accounts,
@@ -95,9 +95,9 @@ def exec_block(block: BlockAPI):
         app_state["account_ids"] = get_active_accounts(snx)
 
     # every 100 blocks run the swap
-    if snx.network_id in [8453] and block.number % 100 == 0:
-        # check approvals
-        swap_approvals(snx)
-
-        # execute the swap
-        execute_swap(snx, SWAP_THRESHOLD)
+    if block.number % 10 == 0:
+        # execute swap according to the network
+        if snx.network_id in [8453]:
+            execute_base_swap(snx, SWAP_THRESHOLD)
+        elif snx.network_id == 42161:
+            execute_arbitrum_swap(snx, SWAP_THRESHOLD)
