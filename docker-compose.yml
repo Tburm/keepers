@@ -32,3 +32,20 @@ services:
         "--runner",
         "silverback.runner:WebsocketRunner",
       ]
+
+  keeper-eth-mainnet:
+    restart: always
+    build: .
+    env_file: .env.ethereum
+    entrypoint:
+      [
+        "uv",
+        "run",
+        "silverback",
+        "run",
+        "main_l1:app",
+        "--network",
+        "ethereum:mainnet:alchemy",
+        "--runner",
+        "silverback.runner:WebsocketRunner",
+      ]
