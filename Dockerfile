@@ -1,7 +1,7 @@
 # Base image
 FROM ghcr.io/astral-sh/uv:0.4.18-debian
 
-RUN apt-get update && apt-get install -y curl gcc python3-dev && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y curl clang gcc python3-dev && rm -rf /var/lib/apt/lists/*
 
 # Create app directory
 WORKDIR /app
