@@ -16,12 +16,6 @@ from utils.perps_l1 import (
 
 from silverback import SilverbackApp
 
-# TODO:
-# - Fix the network support for the swap
-# - Make all block amounts configurable
-# - Add bfp support
-# - Generalize the swap
-
 # load the environment variables
 load_dotenv()
 
@@ -31,8 +25,15 @@ CANNON_PRESET = os.environ.get("CANNON_PRESET")
 PRICE_SERVICE_ENDPOINT = os.environ.get("PRICE_SERVICE_ENDPOINT")
 
 # constants
-DELAY_SECONDS = 0
-SWAP_THRESHOLD = 200
+ORDER_DELAY_SECONDS = os.getenv("ORDER_DELAY_SECONDS")
+BLOCKS_LIQUIDATE = os.getenv("BLOCKS_LIQUIDATE")
+BLOCKS_ACCOUNT_REFRESH = os.getenv("BLOCKS_ACCOUNT_REFRESH")
+
+ORDER_DELAY_SECONDS = 0 if ORDER_DELAY_SECONDS is None else int(ORDER_DELAY_SECONDS)
+BLOCKS_LIQUIDATE = 10 if BLOCKS_LIQUIDATE is None else int(BLOCKS_LIQUIDATE)
+BLOCKS_ACCOUNT_REFRESH = (
+    100 if BLOCKS_ACCOUNT_REFRESH is None else int(BLOCKS_ACCOUNT_REFRESH)
+)
 
 # set up an initial state
 app_state = {
@@ -74,23 +75,21 @@ def startup(state):
 @app.on_(PerpsMarket.OrderCommitted, new_block_timeout=60)
 def perps_order_committed(event):
     """Settle orders on the perps markets"""
-    settle_perps_order(snx, event, settle_delay=DELAY_SECONDS)
+    settle_perps_order(snx, event, settle_delay=ORDER_DELAY_SECONDS)
     return {"message": f"Perps order committed: {event}"}
 
 
 @app.on_(chain.blocks, new_block_timeout=60)
 def exec_block(block: BlockAPI):
     """Actions to take on every block"""
-    # every 10 blocks run these
-    if block.number % 1 == 0:
+    if block.number % BLOCKS_LIQUIDATE == 0:
         # check liquidations
         liquidatable_accounts = get_liquidatable_accounts(snx, app_state["account_ids"])
 
         if len(liquidatable_accounts) > 0:
             liquidate_accounts(snx, liquidatable_accounts)
 
-    # every 100 blocks update accounts
-    if block.number % 2 == 0:
+    if block.number % BLOCKS_ACCOUNT_REFRESH == 0:
         # update account ids
         app_state["account_ids"] = get_active_accounts(snx)
 
