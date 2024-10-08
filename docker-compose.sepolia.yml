@@ -1,8 +1,8 @@
 services:
-  keeper-base-mainnet:
+  keeper-base-sepolia:
     restart: always
     build: .
-    env_file: .env.base
+    env_file: .env.base-sepolia
     entrypoint:
       [
         "uv",
@@ -11,15 +11,15 @@ services:
         "run",
         "main:app",
         "--network",
-        "base:mainnet:alchemy",
+        "base:sepolia:alchemy",
         "--runner",
         "silverback.runner:WebsocketRunner",
       ]
 
-  keeper-arb-mainnet:
+  keeper-arb-sepolia:
     restart: always
     build: .
-    env_file: .env.arbitrum
+    env_file: .env.arbitrum-sepolia
     entrypoint:
       [
         "uv",
@@ -28,15 +28,15 @@ services:
         "run",
         "main:app",
         "--network",
-        "arbitrum:mainnet:alchemy",
+        "arbitrum:sepolia:alchemy",
         "--runner",
         "silverback.runner:WebsocketRunner",
       ]
 
-  keeper-eth-mainnet:
+  keeper-eth-sepolia:
     restart: always
     build: .
-    env_file: .env.ethereum
+    env_file: .env.ethereum-sepolia
     entrypoint:
       [
         "uv",
@@ -45,7 +45,7 @@ services:
         "run",
         "main_l1:app",
         "--network",
-        "ethereum:mainnet:alchemy",
+        "ethereum:sepolia:alchemy",
         "--runner",
         "silverback.runner:WebsocketRunner",
       ]
