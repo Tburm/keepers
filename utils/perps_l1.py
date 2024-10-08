@@ -1,5 +1,5 @@
 import time
-from synthetix.utils.multicall import multicall_erc7412
+from synthetix.utils.multicall import write_erc7412, multicall_erc7412
 from synthetix.utils import wei_to_ether
 
 MARKET_ID = 3
@@ -16,11 +16,11 @@ def settle_perps_order(snx, order_committed_event, settle_delay=0):
     if settle_delay > 0:
         time.sleep(settle_delay)
 
-    order = snx.perps.get_order(account_id)
-    if order["size_delta"] > 0 and order["is_stale"] == False:
+    order = snx.perps.get_order(account_id, market_id=market_id)
+    if order["size_delta"] != 0 and order["is_stale"] == False:
         snx.logger.info(f"Settling {market_name} order committed by {account_id}")
         order_settlement_tx = snx.perps.settle_order(
-            account_id, market_id=MARKET_ID, submit=False
+            account_id, market_id=market_id, submit=False
         )
 
         # double the base fee
@@ -94,6 +94,9 @@ def get_liquidatable_accounts(snx, account_ids):
         is_position_liquidatables = multicall_erc7412(
             snx, snx.perps.market_proxy, "isPositionLiquidatable", fn_inputs
         )
+        is_margin_liquidatables = multicall_erc7412(
+            snx, snx.perps.market_proxy, "isMarginLiquidatable", fn_inputs
+        )
         can_liquidates = zip(chunk, is_position_liquidatables)
 
         liq_accounts = [
@@ -109,19 +112,32 @@ def liquidate_accounts(snx, liquidatable_accounts):
     for account_id in liquidatable_accounts:
         snx.logger.info(f"Liquidating account {account_id}")
         try:
-            # TODO: Check if the account is already flagged
+            # first to to flag the account
+            # if it fails, we skip flagging
             flag_tx = snx.perps.flag(
-                account_id=account_id, market_id=MARKET_ID, submit=True
-            )
-            flag_receipt = snx.wait(flag_tx)
-            assert flag_receipt["status"] == 1
-
-            # TODO: choose the type of liquidation
-            liquidate_tx_params = snx.perps.liquidate(
                 account_id=account_id, market_id=MARKET_ID, submit=False
             )
+            calls = [
+                (
+                    flag_tx["to"],
+                    True,
+                    0,
+                    flag_tx["data"],
+                )
+            ]
+        except Exception as e:
+            snx.logger.error(f"Error flagging account {account_id}: {e}")
+            calls = []
 
-            liquidate_tx_params = snx.perps.liquidate(account, submit=False)
+        try:
+            # liquidate the account, prepending the flag call
+            liquidate_tx_params = tx_params = write_erc7412(
+                snx,
+                snx.perps.market_proxy,
+                "liquidatePosition",
+                [account_id, MARKET_ID],
+                calls=calls,
+            )
 
             # double the base fee
             liquidate_tx_params["maxFeePerGas"] = (
@@ -129,7 +145,5 @@ def liquidate_accounts(snx, liquidatable_accounts):
             )
 
             liquidate_tx = snx.execute_transaction(liquidate_tx_params)
-            liquidate_receipt = snx.wait(liquidate_tx)
-            assert liquidate_receipt["status"] == 1
         except Exception as e:
             snx.logger.error(f"Error liquidating account {account_id}: {e}")
