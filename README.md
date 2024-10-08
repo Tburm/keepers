@@ -17,7 +17,7 @@ This repository contains keeper scripts for the Synthetix system. These keepers 
 
 ## Configuration
 
-Create a `.env.{network}` file in the root directory for each of the networks listed in the `docker-compose.yml` file. Adjust the values as needed for your specific setup.
+Create a `.env.{network}` file in the root directory for each of the networks listed in the `docker-compose.yml` file. Adjust the values as needed for your specific setup. See the `.env_example` file for the required variables.
 
 ## Run Using Docker
 
