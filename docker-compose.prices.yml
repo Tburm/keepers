@@ -1,0 +1,17 @@
+services:
+  prices-base:
+    restart: always
+    build: .
+    env_file: .env.base-prices
+    entrypoint:
+      [
+        "uv",
+        "run",
+        "silverback",
+        "run",
+        "prices:app",
+        "--network",
+        "base:mainnet:alchemy",
+        "--runner",
+        "silverback.runner:WebsocketRunner",
+      ]
