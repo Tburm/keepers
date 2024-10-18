@@ -11,9 +11,9 @@ services:
         "run",
         "main:app",
         "--network",
-        "base:mainnet:alchemy",
-        "--runner",
-        "silverback.runner:WebsocketRunner",
+        "base:mainnet:node",
+        # "--runner",
+        # "silverback.runner:WebsocketRunner",
       ]
 
   keeper-arb-mainnet:
@@ -45,7 +45,7 @@ services:
         "run",
         "main_l1:app",
         "--network",
-        "ethereum:mainnet:alchemy",
-        "--runner",
-        "silverback.runner:WebsocketRunner",
+        "ethereum:mainnet:node",
+        # "--runner",
+        # "silverback.runner:WebsocketRunner",
       ]

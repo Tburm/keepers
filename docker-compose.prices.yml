@@ -11,7 +11,7 @@ services:
         "run",
         "prices:app",
         "--network",
-        "base:mainnet:alchemy",
-        "--runner",
-        "silverback.runner:WebsocketRunner",
+        "base:mainnet:node",
+        # "--runner",
+        # "silverback.runner:WebsocketRunner",
       ]
