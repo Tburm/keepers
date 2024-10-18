@@ -23,6 +23,7 @@ ADDRESS = os.environ.get("ADDRESS")
 PRIVATE_KEY = os.environ.get("PRIVATE_KEY")
 CANNON_PRESET = os.environ.get("CANNON_PRESET")
 PRICE_SERVICE_ENDPOINT = os.environ.get("PRICE_SERVICE_ENDPOINT")
+NETWORK_10_RPC = os.environ.get("NETWORK_10_RPC")
 
 # constants
 ORDER_DELAY_SECONDS = os.getenv("ORDER_DELAY_SECONDS")
@@ -54,6 +55,7 @@ snx = Synthetix(
     },
     price_service_endpoint=PRICE_SERVICE_ENDPOINT,
     pyth_cache_ttl=0,
+    op_mainnet_rpc=NETWORK_10_RPC,
 )
 
 # Do this to initialize your app
