@@ -13,6 +13,7 @@ from utils.perps_l1 import (
     get_liquidatable_accounts,
     liquidate_accounts,
 )
+from prometheus_client import start_http_server
 
 from silverback import SilverbackApp
 
@@ -41,6 +42,8 @@ app_state = {
     "account_ids": [],
 }
 
+# start the prometheus server
+start_http_server(8000)
 
 # init snx
 snx = Synthetix(
@@ -94,5 +97,4 @@ def exec_block(block: BlockAPI):
     if block.number % BLOCKS_ACCOUNT_REFRESH == 0:
         # update account ids
         app_state["account_ids"] = get_active_accounts(snx)
-
     pass

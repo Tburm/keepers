@@ -1961,6 +1961,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "eth-ape" },
+    { name = "prometheus-client" },
     { name = "python-dotenv" },
     { name = "silverback" },
     { name = "synthetix" },
@@ -1969,6 +1970,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "eth-ape", specifier = "==0.8.15" },
+    { name = "prometheus-client", specifier = ">=0.21.0" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "silverback", specifier = "==0.5.10" },
     { name = "synthetix", specifier = ">=0.1.20" },

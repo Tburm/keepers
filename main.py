@@ -13,7 +13,8 @@ from utils.perps_v3 import (
     get_liquidatable_accounts,
     liquidate_accounts,
 )
-
+from utils.metrics import eth_balance
+from prometheus_client import start_http_server
 from silverback import SilverbackApp
 
 # load the environment variables
@@ -45,6 +46,8 @@ app_state = {
     "account_ids": [],
 }
 
+# start the prometheus server
+start_http_server(8000)
 
 # init snx
 snx = Synthetix(
@@ -75,6 +78,10 @@ PerpsMarket = Contract(
 def startup(state):
     """On startup, initialize the state"""
     app_state["account_ids"] = get_active_accounts(snx)
+
+    # update the eth balance
+    eth_balance_dict = snx.get_eth_balance()
+    eth_balance.set(eth_balance_dict["eth"])
     return {"message": "Starting..."}
 
 
@@ -100,6 +107,10 @@ def exec_block(block: BlockAPI):
     if block.number % BLOCKS_ACCOUNT_REFRESH == 0:
         # update account ids
         app_state["account_ids"] = get_active_accounts(snx)
+
+        # update the eth balance
+        eth_balance_dict = snx.get_eth_balance()
+        eth_balance.set(eth_balance_dict["eth"])
 
     # every 100 blocks run the swap
     if block.number % BLOCKS_SWAP == 0:
