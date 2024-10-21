@@ -1,6 +1,17 @@
 import time
 from synthetix.utils.multicall import write_erc7412, multicall_erc7412
 from synthetix.utils import wei_to_ether
+from .metrics import (
+    order_committed,
+    orders_settled,
+    orders_failed,
+    orders_settled_by_others,
+    active_accounts,
+    liquidatable_accounts,
+    liquidations_submitted,
+    liquidations_failed,
+)
+
 
 MARKET_ID = 3
 
@@ -12,6 +23,7 @@ def settle_perps_order(snx, order_committed_event, settle_delay=0):
 
     # add a delay
     snx.logger.info(f"{market_name} Order committed by {account_id}")
+    order_committed.inc()
 
     if settle_delay > 0:
         time.sleep(settle_delay)
@@ -32,12 +44,15 @@ def settle_perps_order(snx, order_committed_event, settle_delay=0):
             snx.logger.info(
                 f"Keeper settled {market_name} order committed by {account_id}"
             )
+            orders_settled.inc()
         else:
             snx.logger.error(
                 f"Keeper failed to settle {market_name} order committed by {account_id}"
             )
+            orders_failed.inc()
     else:
         snx.logger.info(f"Keeper settled {market_name} order committed by {account_id}")
+        orders_settled_by_others.inc()
 
 
 def get_active_accounts(snx):
@@ -73,13 +88,14 @@ def get_active_accounts(snx):
     # filter accounts without a margin requirement
     # this eliminates accounts that have no open positions or small amounts of collateral
     account_infos = zip(account_ids, digests)
-    active_accounts = [
+    active_account_ids = [
         account[0] for account in account_infos if wei_to_ether(account[1][1]) >= 1
     ]
     snx.logger.info(
-        f"Updating active accounts list with {len(active_accounts)} accounts"
+        f"Updating active accounts list with {len(active_account_ids)} accounts"
     )
-    return active_accounts
+    active_accounts.set(len(active_account_ids))
+    return active_account_ids
 
 
 def get_liquidatable_accounts(snx, account_ids):
@@ -105,6 +121,7 @@ def get_liquidatable_accounts(snx, account_ids):
         all_liq_accounts.extend(liq_accounts)
 
     snx.logger.info(f"Found {len(all_liq_accounts)} liquidatable accounts")
+    liquidatable_accounts.set(len(all_liq_accounts))
     return all_liq_accounts
 
 
@@ -145,5 +162,7 @@ def liquidate_accounts(snx, liquidatable_accounts):
             )
 
             liquidate_tx = snx.execute_transaction(liquidate_tx_params)
+            liquidations_submitted.inc()
         except Exception as e:
             snx.logger.error(f"Error liquidating account {account_id}: {e}")
+            liquidations_failed.inc()

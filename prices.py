@@ -8,6 +8,14 @@ from synthetix import Synthetix
 from synthetix.utils.multicall import write_erc7412, multicall_erc7412
 from eth_utils import decode_hex
 
+from utils.metrics import (
+    eth_balance,
+    prices_pushed,
+    price_pushes_failed,
+    price_pushes_skipped,
+)
+from prometheus_client import start_http_server
+
 from silverback import SilverbackApp
 
 # load the environment variables
@@ -93,10 +101,13 @@ def check_prices(snx, feed_ids):
             # log the result
             if tx_receipt["status"] == 1:
                 snx.logger.info(f"Price feeds updated successfully")
+                prices_pushed.observe(len(stale_feeds))
             else:
                 snx.logger.error(f"Price feeds update failed")
+                price_pushes_failed.inc()
         else:
             snx.logger.info("Too rich for my blood, brother")
+            price_pushes_skipped.inc()
     else:
         snx.logger.info(f"No stale prices found")
 
@@ -105,6 +116,14 @@ def check_prices(snx, feed_ids):
 def startup(state):
     # log the available markets
     snx.logger.info(f"Available markets: {snx.perps.markets_by_name.keys()}")
+
+    # check the prices
+    price_feed_ids = list(snx.pyth.price_feed_ids.values())
+    check_prices(snx, price_feed_ids)
+
+    # update the eth balance
+    eth_balance_dict = snx.get_eth_balance()
+    eth_balance.set(eth_balance_dict["eth"])
     pass
 
 
@@ -114,3 +133,7 @@ def exec_block(block: BlockAPI):
     if block.number % 30 == 0:
         price_feed_ids = list(snx.pyth.price_feed_ids.values())
         check_prices(snx, price_feed_ids)
+
+        # update the eth balance
+        eth_balance_dict = snx.get_eth_balance()
+        eth_balance.set(eth_balance_dict["eth"])
