@@ -12,8 +12,8 @@ services:
         "main:app",
         "--network",
         "base:sepolia:node",
-        # "--runner",
-        # "silverback.runner:WebsocketRunner",
+        "--runner",
+        "silverback.runner:WebsocketRunner",
       ]
 
   keeper-arb-sepolia:
@@ -46,6 +46,6 @@ services:
         "main_l1:app",
         "--network",
         "ethereum:sepolia:node",
-        # "--runner",
-        # "silverback.runner:WebsocketRunner",
+        "--runner",
+        "silverback.runner:WebsocketRunner",
       ]
