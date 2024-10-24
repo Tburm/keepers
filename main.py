@@ -105,6 +105,6 @@ def exec_block(block: BlockAPI):
     if block.number % BLOCKS_SWAP == 0:
         # execute swap according to the network
         if snx.network_id == 8453:
-            execute_base_swap(snx, SWAP_THRESHOLD_USD)
+            execute_base_swap(snx, SWAP_THRESHOLD)
         elif snx.network_id == 42161:
-            execute_arbitrum_swap(snx, SWAP_THRESHOLD_USD)
+            execute_arbitrum_swap(snx, SWAP_THRESHOLD)
