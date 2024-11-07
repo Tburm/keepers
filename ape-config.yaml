@@ -37,24 +37,24 @@ arbitrum:
 node:
   ethereum:
     mainnet:
-      uri: ${NETWORK_1_RPC}
+      uri: $NETWORK_1_RPC
     sepolia:
-      uri: ${NETWORK_11155111_RPC}
+      uri: $NETWORK_11155111_RPC
   base:
     mainnet:
-      uri: ${NETWORK_8453_RPC}
+      uri: $NETWORK_8453_RPC
     sepolia:
-      uri: ${NETWORK_84532_RPC}
+      uri: $NETWORK_84532_RPC
   arbitrum:
     mainnet:
-      uri: ${NETWORK_42161_RPC}
+      uri: $NETWORK_42161_RPC
     sepolia:
-      uri: ${NETWORK_421614_RPC}
+      uri: $NETWORK_421614_RPC
   optimism:
     mainnet:
-      uri: ${NETWORK_10_RPC}
+      uri: $NETWORK_10_RPC
     sepolia:
-      uri: ${NETWORK_420_RPC}
+      uri: $NETWORK_420_RPC
 
 foundry:
   block_time: 2

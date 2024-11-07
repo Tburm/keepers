@@ -117,6 +117,17 @@ wheels = [
 ]
 
 [[package]]
+name = "apepay"
+version = "0.3.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "eth-ape" },
+    { name = "eth-typing" },
+    { name = "pydantic" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/65/91/16f457b8c5189fdbef4b5808d75c7927cd9b29f1caf2fd8471458a450b60/apepay-0.3.2.tar.gz", hash = "sha256:5a65ba3aee7f1280a7c15c7f495f1e82cff745ccdb01d6d665b9cf6a72cde587", size = 333939 }
+
+[[package]]
 name = "asttokens"
 version = "2.4.1"
 source = { registry = "https://pypi.org/simple" }
@@ -481,7 +492,7 @@ wheels = [
 
 [[package]]
 name = "eth-ape"
-version = "0.8.15"
+version = "0.8.20"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -518,9 +529,9 @@ dependencies = [
     { name = "watchdog" },
     { name = "web3", extra = ["tester"] },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f0/f0/897ff3fdb24e932fccdd63a635a0c56cdc7e3726fa431bd6ae5bc47590b7/eth-ape-0.8.15.tar.gz", hash = "sha256:35e584f7cccd7cbcceefcb2c04109347a11f07f2c1e9eac1e2987bf7c54be6e3", size = 1114716 }
+sdist = { url = "https://files.pythonhosted.org/packages/cb/68/c8d1c041d3928392e9375810d966c8b423dde51ddf555a07732fa9cc18c5/eth-ape-0.8.20.tar.gz", hash = "sha256:b4044a9490d35f6a5af52a105ce0d7bc2c968906831989b7906a9c2ce050582b", size = 1130640 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d7/c7/3e6ec4ead3592fb9cd8466e0dcf7f8200f573756393d3aa14c95787b8fbb/eth_ape-0.8.15-py3-none-any.whl", hash = "sha256:d5a68ac06a2336c55859374c3c1d6c32fcfb9fe510e4f8c5e0292a264ff226eb", size = 366292 },
+    { url = "https://files.pythonhosted.org/packages/0f/b4/8ef8376e922dd2bb02b7f6ed158bc4a93c28a4df4b5ff05d4a04c5d14260/eth_ape-0.8.20-py3-none-any.whl", hash = "sha256:4da458c08482e0df6a7f400e00536aac60032fa25efd042ffd15b9e8ce32a6c1", size = 379179 },
 ]
 
 [[package]]
@@ -696,14 +707,14 @@ wheels = [
 
 [[package]]
 name = "evmchains"
-version = "0.0.12"
+version = "0.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5c/82/73a63a958f5c06506b58a8d2c264e6e7e0a3f4cba7503679deba38201c47/evmchains-0.0.12.tar.gz", hash = "sha256:bccc69111de2bd7001c3cffd0f0bc97d4cd3c1e529035950b413930c347a9b75", size = 23262 }
+sdist = { url = "https://files.pythonhosted.org/packages/e3/52/01e4d5183b5003d7ec52460e203c7b73b59ad08635e8edf5521f1eeeb16f/evmchains-0.1.1.tar.gz", hash = "sha256:b6775067a0ea3f1ede4bb80fdf2753c0208e96714b35db8a950a90d0470e96aa", size = 26345 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/14/4b/e77d4c7e68dcfac983288c01403f15a3d3bee75f1aa061c0627407a6ac34/evmchains-0.0.12-py3-none-any.whl", hash = "sha256:7c9fc2f5c2fc05387296507cf993665418048cdfda032469ce6b53ae010f9b3b", size = 16217 },
+    { url = "https://files.pythonhosted.org/packages/55/6b/08204a2bfe54a6cdbd3297348ee86944424295165c3d7a4248c0b5ff5153/evmchains-0.1.1-py3-none-any.whl", hash = "sha256:0a865473362a537fd415ef8bbdb54dadd996b6dfef411c5247e3b805c9bba9b0", size = 18877 },
 ]
 
 [[package]]
@@ -1850,9 +1861,10 @@ wheels = [
 
 [[package]]
 name = "silverback"
-version = "0.5.10"
+version = "0.6.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "apepay" },
     { name = "click" },
     { name = "eth-ape" },
     { name = "eth-pydantic-types" },
@@ -1863,9 +1875,9 @@ dependencies = [
     { name = "taskiq", extra = ["metrics"] },
     { name = "tomlkit" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/98/34/787083f005c88d99e94286dfab1fd7119c15f0cd2784c35ca62999d07e8c/silverback-0.5.10.tar.gz", hash = "sha256:998842911e39fe826b19c96cdeb17ce36ff2199a3f66e8009481c1fdf5ff36b7", size = 62298 }
+sdist = { url = "https://files.pythonhosted.org/packages/97/dd/4d5322656b260173aa2ab3f056607a0aff2e51218af061c75929ab8b7a18/silverback-0.6.4.tar.gz", hash = "sha256:d13cfd0866926b76cffeeb0e1bdbcfccf8b03ffd34b457470872216634732e8b", size = 73473 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/98/d4/a38c1e2ffce262c2a5f1875624141069139fc59726644f1b20ecf961dfd3/silverback-0.5.10-py3-none-any.whl", hash = "sha256:77853f7c44e25a722e53a55fb344c0e8bc657d0c8ec82bc4cbb0976bafb5f891", size = 47193 },
+    { url = "https://files.pythonhosted.org/packages/d8/bc/3c01ea94d90affc352566d83616ce236e06880c0108128910b4bd38fa405/silverback-0.6.4-py3-none-any.whl", hash = "sha256:72580e7efe0d8b13cdde863b6157c758db81b7d865de74437723b791ef5e5851", size = 56058 },
 ]
 
 [[package]]
@@ -1940,7 +1952,7 @@ wheels = [
 
 [[package]]
 name = "synthetix"
-version = "0.1.20"
+version = "0.1.21"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "gql" },
@@ -1950,9 +1962,9 @@ dependencies = [
     { name = "requests-toolbelt" },
     { name = "web3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/97/5f/a19ee3339aa38198e6f33f8eb664b5055b58141aea01129746d0e42bf76a/synthetix-0.1.20.tar.gz", hash = "sha256:e729e647a4c5b192ceba32f823bfed6c5b67477ecbbcfbc27bfb8e06f452ae50", size = 204408 }
+sdist = { url = "https://files.pythonhosted.org/packages/43/6e/9061d7b857fe908e62d28dc24f79925c6fa3fec5be93884deccb8a2f8cc7/synthetix-0.1.21.tar.gz", hash = "sha256:aa132c4cb33b71e855fe6e26b4c2af63a036ced6773a71bf3fb94db6f33aaedd", size = 213144 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a5/1c/a86199b9a2e8fabd4885ac538f0decf030fbf0c99f4f1c8c1f2860a4c611/synthetix-0.1.20-py3-none-any.whl", hash = "sha256:15e4ed92533add7c5b203d28cdb5b9e816f4644b44d9dba9b3711060d24c9083", size = 251525 },
+    { url = "https://files.pythonhosted.org/packages/66/41/808f96c5402485ebc062e1c06d44b4d1b254c80b89daed75858e4dc239a8/synthetix-0.1.21-py3-none-any.whl", hash = "sha256:d47b4c55a094457a427d1991f65465c6c2abb84b8ccebb8647e31d36340ff84d", size = 263709 },
 ]
 
 [[package]]
@@ -1968,10 +1980,10 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "eth-ape", specifier = "==0.8.15" },
+    { name = "eth-ape", specifier = "==0.8.20" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
-    { name = "silverback", specifier = "==0.5.10" },
-    { name = "synthetix", specifier = ">=0.1.20" },
+    { name = "silverback", specifier = "==0.6.4" },
+    { name = "synthetix", specifier = ">=0.1.21" },
 ]
 
 [[package]]

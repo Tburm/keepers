@@ -5,8 +5,8 @@ description = "A collection of keepers for Synthetix contracts"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "eth-ape==0.8.15",
+    "eth-ape==0.8.20",
     "python-dotenv>=1.0.1",
-    "silverback==0.5.10",
-    "synthetix>=0.1.20",
+    "silverback==0.6.4",
+    "synthetix>=0.1.21",
 ]
