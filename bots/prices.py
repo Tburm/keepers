@@ -8,7 +8,7 @@ from synthetix import Synthetix
 from synthetix.utils.multicall import write_erc7412, multicall_erc7412
 from eth_utils import decode_hex
 
-from silverback import SilverbackApp
+from silverback import SilverbackBot
 
 # load the environment variables
 load_dotenv()
@@ -23,9 +23,12 @@ NETWORK_10_RPC = os.environ.get("NETWORK_10_RPC")
 STALENESS_TOLERANCE = 3300
 MAX_ETH_COST = 0.05
 
+# initialize the bot
+bot = SilverbackBot()
+
 # init snx
 snx = Synthetix(
-    provider_rpc=chain.provider.uri,
+    provider_rpc=bot.provider.uri,
     private_key=PRIVATE_KEY,
     address=ADDRESS,
     request_kwargs={"timeout": 120},
@@ -38,9 +41,6 @@ snx = Synthetix(
     pyth_cache_ttl=0,
     op_mainnet_rpc=NETWORK_10_RPC,
 )
-
-# Do this to initialize your app
-app = SilverbackApp()
 
 
 def check_prices(snx, feed_ids):
@@ -101,7 +101,7 @@ def check_prices(snx, feed_ids):
         snx.logger.info(f"No stale prices found")
 
 
-@app.on_startup()
+@bot.on_startup()
 def startup(state):
     # log the available markets
     snx.logger.info(f"Available markets: {snx.perps.markets_by_name.keys()}")
@@ -109,7 +109,7 @@ def startup(state):
 
 
 # Log new blocks
-@app.on_(chain.blocks)
+@bot.on_(chain.blocks)
 def exec_block(block: BlockAPI):
     if block.number % 30 == 0:
         price_feed_ids = list(snx.pyth.price_feed_ids.values())

@@ -9,7 +9,7 @@ services:
         "run",
         "silverback",
         "run",
-        "prices:app",
+        "prices",
         "--network",
         "base:mainnet:node",
         "--runner",
