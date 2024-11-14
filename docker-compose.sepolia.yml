@@ -2,7 +2,9 @@ services:
   keeper-base-sepolia:
     restart: always
     build: .
-    env_file: .env.base-sepolia
+    env_file:
+      - .env
+      - .env.base-sepolia
     entrypoint:
       [
         "uv",
@@ -12,14 +14,14 @@ services:
         "perps_v3",
         "--network",
         "base:sepolia:node",
-        "--runner",
-        "silverback.runner:WebsocketRunner",
       ]
 
   keeper-arb-sepolia:
     restart: always
     build: .
-    env_file: .env.arbitrum-sepolia
+    env_file:
+      - .env
+      - .env.arbitrum-sepolia
     entrypoint:
       [
         "uv",
@@ -29,14 +31,14 @@ services:
         "perps_v3",
         "--network",
         "arbitrum:sepolia:alchemy",
-        "--runner",
-        "silverback.runner:WebsocketRunner",
       ]
 
   keeper-eth-sepolia:
     restart: always
     build: .
-    env_file: .env.ethereum-sepolia
+    env_file:
+      - .env
+      - .env.ethereum-sepolia
     entrypoint:
       [
         "uv",
@@ -46,6 +48,4 @@ services:
         "perps_bfp",
         "--network",
         "ethereum:sepolia:node",
-        "--runner",
-        "silverback.runner:WebsocketRunner",
       ]
