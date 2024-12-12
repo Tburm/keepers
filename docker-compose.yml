@@ -11,9 +11,7 @@ services:
         "run",
         "perps_v3",
         "--network",
-        "base:mainnet:node",
-        "--runner",
-        "silverback.runner:WebsocketRunner",
+        "base:mainnet:alchemy",
       ]
 
   keeper-arb-mainnet:
@@ -29,8 +27,6 @@ services:
         "perps_v3",
         "--network",
         "arbitrum:mainnet:alchemy",
-        "--runner",
-        "silverback.runner:WebsocketRunner",
       ]
 
   keeper-eth-mainnet:
@@ -46,6 +42,4 @@ services:
         "perps_bfp",
         "--network",
         "ethereum:mainnet:node",
-        "--runner",
-        "silverback.runner:WebsocketRunner",
       ]

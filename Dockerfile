@@ -1,7 +1,7 @@
-# Base image
-FROM ghcr.io/astral-sh/uv:0.4.18-debian
+FROM python:3.12-slim
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-RUN apt-get update && apt-get install -y curl clang gcc python3-dev && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
 
 # Create app directory
 WORKDIR /app
@@ -12,11 +12,7 @@ COPY pyproject.toml .
 COPY ape-config.yaml .
 
 # Install dependencies
-RUN uv python install
 RUN uv sync --frozen
-ENV PATH="/app/.venv/bin:$PATH"
-
-# Install ape plugins
 RUN uv run ape plugins install .
 
 # Copy app source code

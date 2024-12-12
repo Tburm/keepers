@@ -12,8 +12,6 @@ services:
         "perps_v3",
         "--network",
         "base:sepolia:node",
-        "--runner",
-        "silverback.runner:WebsocketRunner",
       ]
 
   keeper-arb-sepolia:
@@ -29,8 +27,6 @@ services:
         "perps_v3",
         "--network",
         "arbitrum:sepolia:alchemy",
-        "--runner",
-        "silverback.runner:WebsocketRunner",
       ]
 
   keeper-eth-sepolia:
@@ -46,6 +42,4 @@ services:
         "perps_bfp",
         "--network",
         "ethereum:sepolia:node",
-        "--runner",
-        "silverback.runner:WebsocketRunner",
       ]
