@@ -11,7 +11,7 @@ services:
         "run",
         "perps_v3",
         "--network",
-        "base:mainnet:node",
+        "base:mainnet:alchemy",
       ]
 
   keeper-arb-mainnet:
