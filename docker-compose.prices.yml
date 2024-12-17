@@ -2,7 +2,9 @@ services:
   prices-base:
     restart: always
     build: .
-    env_file: .env.base-prices
+    env_file:
+      - .env
+      - .env.base-prices
     entrypoint:
       [
         "uv",

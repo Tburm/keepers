@@ -2,7 +2,9 @@ services:
   keeper-base-sepolia:
     restart: always
     build: .
-    env_file: .env.base-sepolia
+    env_file:
+      - .env
+      - .env.base-sepolia
     entrypoint:
       [
         "uv",
@@ -17,7 +19,9 @@ services:
   keeper-arb-sepolia:
     restart: always
     build: .
-    env_file: .env.arbitrum-sepolia
+    env_file:
+      - .env
+      - .env.arbitrum-sepolia
     entrypoint:
       [
         "uv",
@@ -32,7 +36,9 @@ services:
   keeper-eth-sepolia:
     restart: always
     build: .
-    env_file: .env.ethereum-sepolia
+    env_file:
+      - .env
+      - .env.ethereum-sepolia
     entrypoint:
       [
         "uv",
